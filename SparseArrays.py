@@ -6,6 +6,8 @@ import random
 import re
 import sys
 
+from collections import Counter
+
 #
 # Complete the 'matchingStrings' function below.
 #
@@ -16,22 +18,8 @@ import sys
 #
 
 def matchingStrings(strings, queries):
-    # Create a dictionary to count occurrences of each string
-    string_count = {}
-
-    # Count the occurrences of each string in the input list
-    for string in strings:
-        if string in string_count:
-            string_count[string] += 1
-        else:
-            string_count[string] = 1
-
-    # For each query, return the count from the dictionary (or 0 if not present)
-    result = []
-    for query in queries:
-        result.append(string_count.get(query, 0))
-
-    return result
+    string_count = Counter(strings)
+    return [string_count.get(query, 0) for query in queries]
 
 if __name__ == '__main__':
     fptr = open(os.environ['OUTPUT_PATH'], 'w')
