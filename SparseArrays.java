@@ -4,39 +4,42 @@ import java.security.*;
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.*;
 import java.util.regex.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
-class Result {
-
-    /*
-     * Complete the 'matchingStrings' function below.
-     *
-     * The function is expected to return an INTEGER_ARRAY.
-     * The function accepts following parameters:
-     *  1. STRING_ARRAY strings
-     *  2. STRING_ARRAY queries
-     */
-
-    public static List<Integer> matchingStrings(List<String> strings, List<String> queries) {
-        List<Integer> result = new ArrayList<>();
+class Result
+{
+    public static List<Integer> matchingStrings(List<String> strings, List<String> queries)
+    {
+        HashMap<String, Integer> stringCount = new HashMap<String, Integer>();
         
-        for (int i = 0; i < queries.size(); i++) {
-            int count = 0;
-            for (int j = 0; j < strings.size(); j++) {
-                if (queries.get(i).equals(strings.get(j))) {
-                    count++;
-                }
+        for (String str : strings)
+        {
+            if (stringCount.containsKey(str))
+            {
+                stringCount.put(str, stringCount.get(str) + 1);
             }
-            result.add(count);
+            else
+            {
+                stringCount.put(str, 1);
+            }
+        }
+        
+        List<Integer> result = new ArrayList<Integer>();
+        
+        for (String qry : queries)
+        {
+            if (stringCount.containsKey(qry))
+            {
+                result.add(stringCount.get(qry));
+            }
+            else
+            {
+                result.add(0);
+            }
         }
         
         return result;
     }
-
 }
 
 public class Solution {
@@ -46,34 +49,33 @@ public class Solution {
 
         int stringsCount = Integer.parseInt(bufferedReader.readLine().trim());
 
-        List<String> strings = IntStream.range(0, stringsCount).mapToObj(i -> {
-            try {
-                return bufferedReader.readLine();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        })
-            .collect(toList());
+        List<String> strings = new ArrayList<>();
+
+        for (int i = 0; i < stringsCount; i++) {
+            String stringsItem = bufferedReader.readLine();
+            strings.add(stringsItem);
+        }
 
         int queriesCount = Integer.parseInt(bufferedReader.readLine().trim());
 
-        List<String> queries = IntStream.range(0, queriesCount).mapToObj(i -> {
-            try {
-                return bufferedReader.readLine();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        })
-            .collect(toList());
+        List<String> queries = new ArrayList<>();
+
+        for (int i = 0; i < queriesCount; i++) {
+            String queriesItem = bufferedReader.readLine();
+            queries.add(queriesItem);
+        }
 
         List<Integer> res = Result.matchingStrings(strings, queries);
 
-        bufferedWriter.write(
-            res.stream()
-                .map(Object::toString)
-                .collect(joining("\n"))
-            + "\n"
-        );
+        for (int i = 0; i < res.size(); i++) {
+            bufferedWriter.write(String.valueOf(res.get(i)));
+
+            if (i != res.size() - 1) {
+                bufferedWriter.write("\n");
+            }
+        }
+
+        bufferedWriter.newLine();
 
         bufferedReader.close();
         bufferedWriter.close();
